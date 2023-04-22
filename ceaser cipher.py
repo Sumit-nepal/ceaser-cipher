@@ -2,7 +2,7 @@
 
 # defining the function for welcome message
 def welcome():
-    print("\nWelcome to the Ceaser Cipher")
+    print("Welcome to the Ceaser Cipher")
     print("This program encrypts and decrypts text with the Caesar Cipher.")
 
 # defining enter message function to prompt user for message and mode
@@ -20,10 +20,10 @@ def enter_message():
     # prompt user to ask where they want to read file
     while True:
         console_or_file = str(input("Would you like to read from a file (f) or the console (c)?"))
-        if console_or_file != "f" and console_or_file != "c":
-            console_or_file = str(input("Would you like to read from a file (f) or the console (c)?"))
-        else:
+        if console_or_file == "f" or console_or_file == "c":
             break
+        else:
+            console_or_file = str(input("Would you like to read from a file (f) or the console (c)?"))
        
     
     # prompt user for message to encrypt or decrypt according to mode selected by user 
@@ -55,7 +55,7 @@ def enter_message():
             print("Invalid Shift")
     
     # return mode, message and shift number
-    return mode, message, shift_number
+    return mode, message, shift_number, console_or_file
 
 
 # defining function for encrypting the message
@@ -188,3 +188,41 @@ def message_or_file():
     else:
         return None
     
+
+# define main function 
+def main():
+    # call the welcome function
+    welcome()
+    while True:
+         # call the enter_message function and store its returned value
+        mode, message, shift_number, console_or_file, = enter_message()
+
+    # if mode is e call encrypt function and pass the arguments
+        if mode == "e":
+            encrypted_message= encrypt(message, shift_number)
+            if console_or_file == "c":  # if user input is console print encrypted message in cosole
+                print(encrypted_message)
+            else:
+                breakpoint
+        else:  # else call the decrypted function and pass the argument
+            decrypted_message = decrypt(message, shift_number)
+            if console_or_file == "c":  # if user input is console print decrypted message in console
+                print(decrypted_message)
+            else:
+               breakpoint
+        
+        while True:
+            # ask user if they want to encrypt or decrypt another message
+            user = str(input("Would you like to encrypt or decrypt another message? (y/n): "))
+            if user == "y" or user == "n":  # check if user input is valid
+                break
+            else:  # if user input is not valid prompt again for input
+                user = str(input("Would you like to encrypt or decrypt another message? (y/n): "))
+        
+        if user == "n":  # terminate the program if user input is n
+            print("Thanks for using the program, goodbye!")
+            break 
+
+
+# call the main function
+main()
