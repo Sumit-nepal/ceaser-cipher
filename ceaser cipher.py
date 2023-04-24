@@ -20,12 +20,11 @@ def enter_message():
     # prompt user to ask where they want to read file
     while True:
         console_or_file = str(input("Would you like to read from a file (f) or the console (c)?"))
-        if console_or_file == "f" or console_or_file == "c":
-            break
+        if console_or_file != "f" and console_or_file != "c":
+            continue
         else:
-            console_or_file = str(input("Would you like to read from a file (f) or the console (c)?"))
-       
-    
+            break
+
     # prompt user for message to encrypt or decrypt according to mode selected by user 
     if mode == "e" and console_or_file == "c":
         while True:
@@ -56,8 +55,7 @@ def enter_message():
     
     # return mode, message and shift number
     return mode, message, shift_number, console_or_file
-
-
+    
 # defining function for encrypting the message
 def encrypt(message, shift_number):
     # import string module and define alphabets
@@ -100,6 +98,20 @@ def decrypt(message, shift_number):
 
 # defining function for reading text from text file
 def process_file(filename, mode):
+    # prompt user for shift number
+    valid = False # set initial value of valid to false
+    while not valid:
+        try:
+            while True:
+                shift_number = int (input("What is shift number: "))
+                if shift_number > 0 and shift_number <= 25:
+                    break
+                else:
+                    print("Invalid Shift")
+            valid = True  # break the loop is shift number is valid
+        except ValueError:
+            print("Invalid Shift")
+
     with open(filename,"r") as file:  # open text file as file
         message = file.readlines()  # read lines from the file and store in message
 
@@ -114,7 +126,7 @@ def process_file(filename, mode):
             for char in line:
                  # if character is alphabet encrypt it by calling encrypt function
                 if char.isalpha():
-                    encrypted_character = encrypt(char,)
+                    encrypted_character = encrypt(char, shift_number)
                     encrypted_message += encrypted_character # add encrypted character in encrypted message
                 else:
                     # if character is non alphabet add as it is
@@ -133,13 +145,14 @@ def process_file(filename, mode):
             for char in line:
                  # if character is alphabet encrypt it by calling decrypt function
                 if char.isalpha():
-                    decrypted_character = decrypt(char,)
+                    decrypted_character = decrypt(char, shift_number)
                     decrypted_message += decrypted_character # add decrypted character in decrypted message
                 else:
                     # if character is non alphabet add as it is
                     decrypted_message += char
         return decrypted_message
-
+encrypted = process_file("message.txt","d")
+print(encrypted)
 
 # defining function to check file existence
 def is_file(filename):
@@ -195,7 +208,7 @@ def main():
     welcome()
     while True:
          # call the enter_message function and store its returned value
-        mode, message, shift_number, console_or_file, = enter_message()
+        mode, message, shift_number, console_or_file= enter_message()
 
     # if mode is e call encrypt function and pass the arguments
         if mode == "e":
@@ -203,14 +216,15 @@ def main():
             if console_or_file == "c":  # if user input is console print encrypted message in cosole
                 print(encrypted_message)
             else:
-                breakpoint
+                break
         else:  # else call the decrypted function and pass the argument
             decrypted_message = decrypt(message, shift_number)
             if console_or_file == "c":  # if user input is console print decrypted message in console
                 print(decrypted_message)
             else:
-               breakpoint
+               break
         
+     
         while True:
             # ask user if they want to encrypt or decrypt another message
             user = str(input("Would you like to encrypt or decrypt another message? (y/n): "))
@@ -223,6 +237,5 @@ def main():
             print("Thanks for using the program, goodbye!")
             break 
 
-
 # call the main function
-main()
+# main()
