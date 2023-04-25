@@ -116,6 +116,15 @@ def is_file(filename):
 
     except FileNotFoundError:
         file_found = not file_found  # return false if file not found
+    
+    except PermissionError:
+        file_found = not file_found  # return false if file permission is not allowed
+    
+    except IOError:
+        file_found = not file_found  # return false if there is problem with reading file
+
+    except Exception as e:
+        print(f"unknown error{e}")  # if any other problem arises display the error
 
     # return file_found
     return file_found
@@ -124,7 +133,7 @@ def is_file(filename):
 # defining function to write strings in text file
 def write_message(message):
     # open result text file in write mode
-    with open("result.txt", "w") as file:
+    with open("results.txt", "w") as file:
         for line in message:  # iterate through each line
             file.write(line)  # write the line in result text file
 
@@ -132,23 +141,11 @@ def write_message(message):
 # defining function to prompt console or file
 def message_or_file():
     while True:
-        mode = input("Enter 'e' to encrypt or 'd' to decrypt: ").lower()
-        if mode not in ['e', 'd']:
-            print("Invalid mode. Please enter 'e' or 'd'.")
+        filename = input("Enter filename: ")
+        if not is_file(filename):
+            print("Invalid filename")
             continue
-
-        option = input("Would you like to read from the file (f) or console (c)").lower()
-        if option not in ['c', 'f']:
-            print("Invalid option")
-            continue
-
-        if option == 'f':
-            while True:
-                filename = input("Enter filename: ")
-                if not is_file(filename):
-                    print("Invalid filename")
-                    continue
-                return mode, option, filename
+        return filename
 
 
 # defining enter message function to prompt user for message and mode
@@ -188,7 +185,7 @@ def enter_message():
                    message):  # check if user input contains any non alphabet
                 break  # break the loop if all character is alphabet
 
-    if console_or_file != "f":
+    if console_or_file == "c":
         valid = False  # set initial value of valid to false
         while not valid:
             try:
@@ -225,7 +222,7 @@ def main():
                 print(decrypted_message)
 
         if console_or_file == "f":
-            mode, option, filename = message_or_file()
+            filename = message_or_file()
             message = process_file(filename, mode)
             print("output written to results.txt")
             write_message(message)
@@ -242,4 +239,5 @@ def main():
             print("Thanks for using the program, goodbye!")
             break
 
+# call the main function to run the program
 main()
