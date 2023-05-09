@@ -191,7 +191,7 @@ def enter_message():
             try:
                 while True:
                     shift_number = int(input("What is shift number: "))
-                    if 0 < shift_number <= 25:
+                    if 0 <= shift_number <= 25:
                         valid = True  # break the loop is shift number is valid
                         break
                     else:
