@@ -240,4 +240,5 @@ def main():
             break
 
 # call the main function to run the program
-main()
+if __name__ == "__main__":
+    main()
